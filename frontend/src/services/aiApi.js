@@ -10,9 +10,9 @@ export async function generateInsights() {
   return response.data;
 }
 
-export async function askAI(message) {
+export async function askAI(question) {
   const response = await api.post("/ai/chat", {
-    message,
+    question: question.trim(),
   });
 
   return response.data;

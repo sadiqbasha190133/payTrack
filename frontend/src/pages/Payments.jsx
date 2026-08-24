@@ -179,13 +179,15 @@ function Payments() {
                     </td>
 
                     <td className="px-5 py-4 font-medium text-slate-900 dark:text-white">
-                      {payment.customerName || "Unknown"}
+                      {payment.customerName ||
+                        payment.customer?.name ||
+                        "Unknown"}
                     </td>
 
                     <td className="px-5 py-4">
-                      {payment.invoiceId ? (
+                      {payment.invoiceId || payment.invoice?._id ?  (
                         <Link
-                          to={`/invoices/${payment.invoiceId}`}
+                          to={`/invoices/${payment.invoiceId || payment.invoice?._id}`}
                           className="font-semibold text-slate-700 hover:underline dark:text-slate-300"
                         >
                           {payment.invoiceNumber ||
