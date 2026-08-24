@@ -91,7 +91,7 @@ const updateCustomer = async (req, res) => {
     }
 
     const customer = await Customer.findByIdAndUpdate(req.params.id, customerData, {
-      new: true,
+      returnDocument: "after",
       runValidators: true
     });
 

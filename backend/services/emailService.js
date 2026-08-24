@@ -36,22 +36,67 @@ const getTransporter = () => {
   return transporter;
 };
 
+// const sendEmail = async ({ to, subject, text }) => {
+//   const emailTransporter = getTransporter();
+
+//   if (!emailTransporter) {
+//     console.warn('Email is not configured. Skipping email notification.');
+//     return { sent: false, skipped: true };
+//   }
+
+//   const result = await emailTransporter.sendMail({
+//     from: process.env.EMAIL_USER,
+//     to,
+//     subject,
+//     text
+//   });
+
+//   return { sent: true, messageId: result.messageId };
+// };
+
 const sendEmail = async ({ to, subject, text }) => {
   const emailTransporter = getTransporter();
 
   if (!emailTransporter) {
-    console.warn('Email is not configured. Skipping email notification.');
-    return { sent: false, skipped: true };
+    console.warn(
+      `Email notification skipped because email is not configured. Recipient: ${to}`
+    );
+
+    return {
+      sent: false,
+      skipped: true
+    };
   }
 
-  const result = await emailTransporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to,
-    subject,
-    text
-  });
+  try {
+    const result = await emailTransporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to,
+      subject,
+      text
+    });
 
-  return { sent: true, messageId: result.messageId };
+    console.log("Email sent successfully:", {
+      to,
+      subject,
+      messageId: result.messageId
+    });
+
+    return {
+      sent: true,
+      skipped: false,
+      messageId: result.messageId
+    };
+  } catch (error) {
+    console.error("Email sending failed:", {
+      to,
+      subject,
+      message: error.message,
+      code: error.code
+    });
+
+    throw error;
+  }
 };
 
 const sendInvoiceCreatedEmail = async (data) => {
